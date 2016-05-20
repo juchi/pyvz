@@ -15,3 +15,7 @@ class Enemy:
         self.life = 100
         self.position = -1, -1
         self.row = -1
+        self.speed = float(20)/1000
+
+    def update(self, elapsed_time):
+        self.position = (self.position[0] - elapsed_time * self.speed, self.position[1])

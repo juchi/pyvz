@@ -16,23 +16,30 @@ class GameState:
         self.plants = []
         self.current_wave = None
         self.enemies = []
+        self.bullets = []
         self.time_since_last_enemy = 0
-        self.grid = Grid(grid_size, grid_pos)
+        self.grid = Grid(grid_size, grid_pos, self)
 
     def mouse_clicked(self, button, pos):
         if button == 1:
             coords = self.grid.get_grid_coords(pos)
             if coords[0] != -1 and self.player.money >= 50:
                 self.player.money -= 50
-                self.plants.append(Plant(1, coords))
+                self.plants.append(Plant(1, coords, self.grid, self))
 
     def update(self, elapsed_time):
         self.update_timers(elapsed_time)
         self.update_wave_status()
+
+        self.update_enemies(elapsed_time)
+        self.update_plants(elapsed_time)
+        self.update_bullets(elapsed_time)
+
         display_grid(self.screen, grid_pos, self.grid)
         display_hud(self.screen, self.player)
         display_plants(self.screen, self.plants, self.grid)
         display_enemies(self.screen, self.enemies, self.grid)
+        display_bullets(self.screen, self.bullets, self.grid)
 
     def update_timers(self, elapsed_time):
         self.time_since_last_enemy += elapsed_time
@@ -46,6 +53,18 @@ class GameState:
             next_enemy.position = (550, self.grid.get_cell_y(next_enemy.row))
             self.enemies.append(next_enemy)
             self.time_since_last_enemy = 0
+
+    def update_enemies(self, elapsed_time):
+        for obj in self.enemies:
+            obj.update(elapsed_time)
+
+    def update_plants(self, elapsed_time):
+        for obj in self.plants:
+            obj.update(elapsed_time)
+
+    def update_bullets(self, elapsed_time):
+        for obj in self.bullets:
+            obj.update(elapsed_time)
 
 
 def display_grid(screen, pos, grid):
@@ -69,14 +88,23 @@ def display_hud(screen, player):
 
 
 def display_plants(screen, plants, grid):
-    cellsize = grid.size[0] / grid.rows
     for plant in plants:
-        pos = (plant.position[0] * cellsize + grid.position[0] + cellsize/2,  plant.position[1] * cellsize + grid.position[1] + cellsize/2)
-        pygame.draw.circle(screen, (0, 255, 0), pos, cellsize / 2)
+        pos = (plant.position[0] * grid.cellsize + grid.position[0] + grid.cellsize/2,
+               plant.position[1] * grid.cellsize + grid.position[1] + grid.cellsize/2)
+        pygame.draw.circle(screen, (0, 255, 0), pos, grid.cellsize / 2)
 
 
 def display_enemies(screen, enemies, grid):
-    cellsize = grid.size[0] / grid.rows
     for enemy in enemies:
-        pos = (enemy.position[0] + grid.position[0] + cellsize/2,  enemy.row * cellsize + grid.position[1] + cellsize/2)
-        pygame.draw.circle(screen, (255, 0, 0), pos, cellsize / 2)
+        pos = (enemy.position[0] + grid.position[0] + grid.cellsize/2,
+               enemy.row * grid.cellsize + grid.position[1] + grid.cellsize/2)
+        pos = (int(pos[0]), int(pos[1]))
+        pygame.draw.circle(screen, (255, 0, 0), pos, grid.cellsize / 2)
+
+
+def display_bullets(screen, bullets, grid):
+    for bullet in bullets:
+        pos = (bullet.position[0] + grid.position[0] + grid.cellsize/2,
+               bullet.position[1] * grid.cellsize + grid.position[1] + grid.cellsize/2)
+        pos = (int(pos[0]), int(pos[1]))
+        pygame.draw.circle(screen, (255, 0, 0), pos, grid.cellsize / 10)
