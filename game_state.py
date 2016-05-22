@@ -1,5 +1,7 @@
 import pygame
 import random
+
+import geometry
 from grid import Grid
 from player import Player
 from plant import Plant
@@ -64,7 +66,14 @@ class GameState:
 
     def update_bullets(self, elapsed_time):
         for obj in self.bullets:
+            if not obj.active:
+                continue
             obj.update(elapsed_time)
+            for enemy in self.enemies:
+                if enemy.alive and geometry.distance(obj.position, enemy.position) < 30:
+                    obj.active = False
+                    enemy.alive = False
+                    break
 
 
 def display_grid(screen, pos, grid):
@@ -89,22 +98,26 @@ def display_hud(screen, player):
 
 def display_plants(screen, plants, grid):
     for plant in plants:
-        pos = (plant.position[0] * grid.cellsize + grid.position[0] + grid.cellsize/2,
-               plant.position[1] * grid.cellsize + grid.position[1] + grid.cellsize/2)
+        pos = (plant.position[0] + grid.position[0],
+               plant.position[1] + grid.position[1])
         pygame.draw.circle(screen, (0, 255, 0), pos, grid.cellsize / 2)
 
 
 def display_enemies(screen, enemies, grid):
     for enemy in enemies:
-        pos = (enemy.position[0] + grid.position[0] + grid.cellsize/2,
-               enemy.row * grid.cellsize + grid.position[1] + grid.cellsize/2)
+        if not enemy.alive:
+            continue
+        pos = (enemy.position[0] + grid.position[0],
+               enemy.position[1] + grid.position[1])
         pos = (int(pos[0]), int(pos[1]))
         pygame.draw.circle(screen, (255, 0, 0), pos, grid.cellsize / 2)
 
 
 def display_bullets(screen, bullets, grid):
     for bullet in bullets:
-        pos = (bullet.position[0] + grid.position[0] + grid.cellsize/2,
-               bullet.position[1] * grid.cellsize + grid.position[1] + grid.cellsize/2)
+        if not bullet.active:
+            continue
+        pos = (bullet.position[0] + grid.position[0],
+               bullet.position[1] + grid.position[1])
         pos = (int(pos[0]), int(pos[1]))
         pygame.draw.circle(screen, (255, 0, 0), pos, grid.cellsize / 10)
