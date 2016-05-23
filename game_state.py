@@ -59,15 +59,17 @@ class GameState:
     def update_enemies(self, elapsed_time):
         for obj in self.enemies:
             obj.update(elapsed_time)
+            if not obj.alive:
+                self.player.money += obj.money_value
+        self.enemies = [e for e in self.enemies if e.alive]
 
     def update_plants(self, elapsed_time):
         for obj in self.plants:
             obj.update(elapsed_time)
 
     def update_bullets(self, elapsed_time):
+        self.bullets = [b for b in self.bullets if b.active]
         for obj in self.bullets:
-            if not obj.active:
-                continue
             obj.update(elapsed_time)
             for enemy in self.enemies:
                 if enemy.alive and geometry.distance(obj.position, enemy.position) < 30:

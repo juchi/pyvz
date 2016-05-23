@@ -17,6 +17,7 @@ class Enemy:
         self.row = -1
         self.speed = float(50)/1000
         self.alive = True
+        self.money_value = 50
 
     def update(self, elapsed_time):
         if self.alive:
