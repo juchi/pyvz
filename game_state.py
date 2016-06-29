@@ -74,7 +74,9 @@ class GameState:
             for enemy in self.enemies:
                 if enemy.alive and geometry.distance(obj.position, enemy.position) < 30:
                     obj.active = False
-                    enemy.alive = False
+                    enemy.take_damages(obj.power)
+                    if not enemy.alive:
+                        self.player.money += 30
                     break
 
 
