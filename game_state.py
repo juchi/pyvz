@@ -35,12 +35,7 @@ class GameState:
                 self.plant_panel.mouse_clicked(pos)
 
     def key_pressed(self, key):
-        if key == pygame.K_a:
-            self.current_plant_type = 1
-        if key == pygame.K_z:
-            self.current_plant_type = 2
-        if key == pygame.K_e:
-            self.current_plant_type = 3
+        return
 
     def update(self, elapsed_time):
         self.update_timers(elapsed_time)
