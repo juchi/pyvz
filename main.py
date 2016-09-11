@@ -22,6 +22,8 @@ def main():
                 sys.exit()
             if event.type == pygame.MOUSEBUTTONUP:
                 state.mouse_clicked(event.button, pygame.mouse.get_pos())
+            if event.type == pygame.KEYUP:
+                state.key_pressed(event.key)
 
         state.update(elapsed)
         pygame.display.flip()

@@ -5,6 +5,7 @@ import geometry
 from grid import Grid
 from player import Player
 from plant import Plant
+from plant_panel import PlantPanel
 from enemies import *
 
 grid_pos = (50, 20)
@@ -21,13 +22,25 @@ class GameState:
         self.bullets = []
         self.time_since_last_enemy = 0
         self.grid = Grid(grid_size, grid_pos, self)
+        self.current_plant_type = 1
+        self.plant_panel = PlantPanel(self, pygame.Rect(0, 40, 40, 200))
 
     def mouse_clicked(self, button, pos):
         if button == 1:
             coords = self.grid.get_grid_coords(pos)
             if coords[0] != -1 and self.player.money >= 50:
                 self.player.money -= 50
-                self.plants.append(Plant(1, coords, self.grid, self))
+                self.plants.append(Plant(self.current_plant_type, coords, self.grid, self))
+            elif self.plant_panel.is_point_inside(pos):
+                self.plant_panel.mouse_clicked(pos)
+
+    def key_pressed(self, key):
+        if key == pygame.K_a:
+            self.current_plant_type = 1
+        if key == pygame.K_z:
+            self.current_plant_type = 2
+        if key == pygame.K_e:
+            self.current_plant_type = 3
 
     def update(self, elapsed_time):
         self.update_timers(elapsed_time)
@@ -37,6 +50,8 @@ class GameState:
         self.update_plants(elapsed_time)
         self.update_bullets(elapsed_time)
 
+        self.screen.fill((255, 255, 255))
+        self.plant_panel.draw(self.screen)
         display_grid(self.screen, grid_pos, self.grid)
         display_hud(self.screen, self.player)
         display_plants(self.screen, self.plants, self.grid)
@@ -81,7 +96,6 @@ class GameState:
 
 
 def display_grid(screen, pos, grid):
-    screen.fill((255, 255, 255))
     black = 0, 0, 0
     xmax = grid.size[0] + pos[0]
     ymax = grid.size[1] + pos[1]
@@ -104,7 +118,7 @@ def display_plants(screen, plants, grid):
     for plant in plants:
         pos = (plant.position[0] + grid.position[0],
                plant.position[1] + grid.position[1])
-        pygame.draw.circle(screen, (0, 255, 0), pos, grid.cellsize / 2)
+        pygame.draw.circle(screen, plant.color, pos, grid.cellsize / 2)
 
 
 def display_enemies(screen, enemies, grid):
