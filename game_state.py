@@ -7,6 +7,7 @@ from player import Player
 from plant import Plant
 from plant_panel import PlantPanel
 from enemies import *
+import plant_type
 
 grid_pos = (50, 20)
 grid_size = (400, 400)
@@ -22,14 +23,22 @@ class GameState:
         self.bullets = []
         self.time_since_last_enemy = 0
         self.grid = Grid(grid_size, grid_pos, self)
-        self.current_plant_type = 1
+        self.plant_types = self.create_plant_types()
+        self.current_plant_type = None
         self.plant_panel = PlantPanel(self, pygame.Rect(0, 40, 40, 200))
+
+    def create_plant_types(self):
+        types = []
+        for key, p in plant_type.type_map.iteritems():
+            ptype = plant_type.PlantType(p["color"], p["power"], p["life"], p["range"])
+            types.append(ptype)
+        return types
 
     def mouse_clicked(self, button, pos):
         if button == 1:
             coords = self.grid.get_grid_coords(pos)
-            if coords[0] != -1 and self.player.money >= 50:
-                self.player.money -= 50
+            if coords[0] != -1 and self.current_plant_type is not None and self.player.money >= self.current_plant_type.price:
+                self.player.money -= self.current_plant_type.price
                 self.plants.append(Plant(self.current_plant_type, coords, self.grid, self))
             elif self.plant_panel.is_point_inside(pos):
                 self.plant_panel.mouse_clicked(pos)

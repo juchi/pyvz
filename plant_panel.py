@@ -1,4 +1,3 @@
-import plant
 from pygame import Rect
 import pygame
 
@@ -12,9 +11,9 @@ class PlantPanel:
     def construct_buttons(self):
         buttons = []
         i = 0
-        for key, p in plant.type_map.iteritems():
+        for p in self.game.plant_types:
             rect = Rect(0, i * self.rect.width, self.rect.width, self.rect.width)
-            buttons.append(Button(rect, key))
+            buttons.append(Button(rect, p))
             i += 1
         return buttons
 
@@ -31,12 +30,12 @@ class PlantPanel:
     def draw(self, screen):
         screen.fill((100, 100, 100), self.rect)
         for button in self.buttons:
-            screen.fill(plant.type_map[button.plant_type]["color"], button.rect.move(self.rect.topleft))
+            screen.fill(button.plant_type.color, button.rect.move(self.rect.topleft))
             if self.game.current_plant_type == button.plant_type:
                 pygame.draw.rect(screen, (255, 0, 0), button.rect.move(self.rect.topleft), 1)
 
 
 class Button:
-    def __init__(self, rect, plant_type):
+    def __init__(self, rect, ptype):
         self.rect = rect
-        self.plant_type = plant_type
+        self.plant_type = ptype
