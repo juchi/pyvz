@@ -8,6 +8,9 @@ class PlantPanel:
         self.rect = rect
         self.buttons = self.construct_buttons()
 
+        default_font = pygame.font.get_default_font()
+        self.price_font = pygame.font.Font(default_font, 12)
+
     def construct_buttons(self):
         buttons = []
         i = 0
@@ -30,12 +33,17 @@ class PlantPanel:
     def draw(self, screen):
         screen.fill((100, 100, 100), self.rect)
         for button in self.buttons:
-            screen.fill(button.plant_type.color, button.rect.move(self.rect.topleft))
-            if self.game.current_plant_type == button.plant_type:
-                pygame.draw.rect(screen, (255, 0, 0), button.rect.move(self.rect.topleft), 1)
+            button.draw(screen, self.price_font, self.rect.topleft, self.game.current_plant_type == button.plant_type)
 
 
 class Button:
     def __init__(self, rect, ptype):
         self.rect = rect
         self.plant_type = ptype
+
+    def draw(self, screen, price_font, panel_top_left, selected):
+        screen.fill(self.plant_type.color, self.rect.move(panel_top_left))
+        price_surface = price_font.render(str(self.plant_type.price), True, (0, 0, 0))
+        screen.blit(price_surface, self.rect.move(panel_top_left))
+        if selected:
+            pygame.draw.rect(screen, (255, 0, 0), self.rect.move(panel_top_left), 1)
