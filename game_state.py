@@ -7,15 +7,16 @@ from player import Player
 from plant import Plant
 from plant_panel import PlantPanel
 from enemies import *
-import plant_type
+from plant_type import *
 
 grid_pos = (50, 20)
 grid_size = (400, 400)
 
 
 class GameState:
-    def __init__(self, screen):
+    def __init__(self, screen, config):
         self.screen = screen
+        self.config = config
         self.player = Player()
         self.plants = []
         self.current_wave = None
@@ -29,8 +30,8 @@ class GameState:
 
     def create_plant_types(self):
         types = []
-        for key, p in plant_type.type_map.iteritems():
-            ptype = plant_type.PlantType(p["color"], p["power"], p["life"], p["range"])
+        for p in self.config['plants']:
+            ptype = PlantType(p["color"], p["power"], p["life"], p["range"], p["price"])
             types.append(ptype)
         return types
 

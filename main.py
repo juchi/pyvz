@@ -1,4 +1,4 @@
-import sys, pygame
+import sys, pygame, yaml
 from game_state import GameState
 
 
@@ -6,10 +6,13 @@ def main():
     pygame.init()
     pygame.font.init()
 
+    config_file = file('config.yml', 'r')
+    config_data = yaml.load(config_file)
+
     size = 640, 480
     screen = pygame.display.set_mode(size)
 
-    state = GameState(screen)
+    state = GameState(screen, config_data)
 
     old_time = pygame.time.get_ticks()
 
