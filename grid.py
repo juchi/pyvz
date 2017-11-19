@@ -10,8 +10,8 @@ class Grid:
         self.game = game
         self.cellsize = self.size[1] / self.rows
 
-    def get_cell_y(self, row):
-        return self.position[1] + self.cellsize * row
+    def get_center_cell_y(self, row):
+        return self.cellsize * row + self.cellsize / 2
 
     def get_grid_coords(self, pos):
         if pos[0] < self.position[0] or pos[1] < self.position[1]:

@@ -10,7 +10,7 @@ from enemies import *
 from plant_type import *
 
 grid_pos = (50, 20)
-grid_size = (400, 400)
+grid_size = (500, 500)
 
 
 class GameState:
@@ -84,7 +84,7 @@ class GameState:
         if self.time_since_last_enemy > self.current_wave.next_enemy_timeout():
             next_enemy = self.current_wave.get_enemy()
             next_enemy.row = random.randint(0, 9)
-            next_enemy.position = (550, self.grid.get_cell_y(next_enemy.row))
+            next_enemy.position = (self.grid.size[0], self.grid.get_center_cell_y(next_enemy.row))
             self.enemies.append(next_enemy)
             self.time_since_last_enemy = 0
 
@@ -145,7 +145,11 @@ def display_enemies(screen, enemies, grid):
         pos = (enemy.position[0] + grid.position[0],
                enemy.position[1] + grid.position[1])
         pos = (int(pos[0]), int(pos[1]))
-        pygame.draw.circle(screen, (255, 0, 0), pos, grid.cellsize / 2)
+        sprite = enemy.get_sprite()
+        if sprite is not None:
+            screen.blit(sprite, (pos[0] - sprite.get_width()/2, pos[1] - sprite.get_height()/2))
+        else:
+            pygame.draw.circle(screen, (255, 0, 0), pos, grid.cellsize / 2)
 
 
 def display_bullets(screen, bullets, grid):

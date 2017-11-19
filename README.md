@@ -15,3 +15,9 @@ pip install -r requirements.txt
 ```
 
 Run `python main.py`
+
+## Licenses
+
+Published under MIT License
+
+Zombie sprites from https://craftpix.net

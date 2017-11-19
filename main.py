@@ -9,7 +9,7 @@ def main():
     config_file = file('config.yml', 'r')
     config_data = yaml.load(config_file)
 
-    size = 640, 480
+    size = 800, 600
     screen = pygame.display.set_mode(size)
 
     state = GameState(screen, config_data)
