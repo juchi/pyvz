@@ -23,10 +23,20 @@ class GameState:
         self.enemies = []
         self.bullets = []
         self.time_since_last_enemy = 0
+        self.current_plant_type = None
         self.grid = Grid(grid_size, grid_pos, self)
         self.plant_types = self.create_plant_types()
-        self.current_plant_type = None
         self.plant_panel = PlantPanel(self, pygame.Rect(0, 40, 40, 200))
+
+    def new_game(self):
+        self.player = Player()
+        self.plants = []
+        self.current_wave = None
+        self.enemies = []
+        self.bullets = []
+        self.time_since_last_enemy = 0
+        self.current_plant_type = None
+        return
 
     def create_plant_types(self):
         types = []
@@ -45,6 +55,8 @@ class GameState:
                 self.plant_panel.mouse_clicked(pos)
 
     def key_pressed(self, key):
+        if key == pygame.K_n:
+            self.new_game()
         return
 
     def update(self, elapsed_time):

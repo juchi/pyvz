@@ -13,6 +13,7 @@ def main():
     screen = pygame.display.set_mode(size)
 
     state = GameState(screen, config_data)
+    state.new_game()
 
     old_time = pygame.time.get_ticks()
 
