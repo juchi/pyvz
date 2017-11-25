@@ -1,6 +1,7 @@
 
 class PlantType:
-    def __init__(self, color, power, life, range, price):
+    def __init__(self, name, color, power, life, range, price):
+        self.name = name
         self.color = tuple(color)
         self.power = power
         self.life = life

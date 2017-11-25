@@ -17,7 +17,7 @@ class EnemyFactory:
         return
 
     def new_enemy(self, attributes):
-        sprites = self.sprite_loader.load_animation('zombie', 'Walk')
+        sprites = self.sprite_loader.load_animation('zombie', 'Walk', True)
         enemy = Enemy(attributes, sprites)
         return enemy
 

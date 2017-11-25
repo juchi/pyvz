@@ -6,7 +6,7 @@ class SpriteLoader:
         self.cell_width = cell_width
         return
 
-    def load_animation(self, entity_name, animation_name):
+    def load_animation(self, entity_name, animation_name, flipX):
         sprites = []
         basename = './sprites/' + entity_name + '/' + animation_name
         extension = '.png'
@@ -16,13 +16,13 @@ class SpriteLoader:
             filename = basename + str(index) + extension
             if not os.path.exists(filename):
                 break
-            sprite = self.get_sprite_surface(filename, self.cell_width)
+            sprite = self.get_sprite_surface(filename, self.cell_width, flipX)
             sprites.append(sprite)
             index += 1
 
         return sprites
 
-    def get_sprite_surface(self, img_path, cell_width):
+    def get_sprite_surface(self, img_path, cell_width, flipX):
         sprite = pygame.image.load(img_path)
         img_size = sprite.get_size()
         ratio = float(img_size[0]) / img_size[1]
@@ -33,5 +33,5 @@ class SpriteLoader:
             height = cell_width
             width = int(height * ratio)
 
-        sprite = pygame.transform.flip(sprite, True, False)
+        sprite = pygame.transform.flip(sprite, flipX, False)
         return pygame.transform.scale(sprite, (width, height))
