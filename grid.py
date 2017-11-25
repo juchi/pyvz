@@ -36,3 +36,10 @@ class Grid:
                 return enemy
 
         return None
+
+    def is_case_free(self, coords):
+        for plant in self.game.plants:
+            if plant.grid_position == coords:
+                return False
+
+        return True

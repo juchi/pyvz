@@ -49,8 +49,9 @@ class GameState:
         if button == 1:
             coords = self.grid.get_grid_coords(pos)
             if coords[0] != -1 and self.current_plant_type is not None and self.player.money >= self.current_plant_type.price:
-                self.player.money -= self.current_plant_type.price
-                self.plants.append(Plant(self.current_plant_type, coords, self.grid, self))
+                if self.grid.is_case_free(coords):
+                    self.player.money -= self.current_plant_type.price
+                    self.plants.append(Plant(self.current_plant_type, coords, self.grid, self))
             elif self.plant_panel.is_point_inside(pos):
                 self.plant_panel.mouse_clicked(pos)
 
