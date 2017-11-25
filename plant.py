@@ -5,15 +5,15 @@ class Plant:
         self.type = type
         self.color = type.color
         self.life = type.life
+        self.power = type.power
+        self.range = type.range
+        self.base_fire_cooldown = type.fire_cooldown
+        self.fire_cooldown = self.base_fire_cooldown
+        self.bullet_speed = float(300) / 1000
         self.grid_position = grid_position
         self.position = grid.get_pixel_coords(grid_position)
         self.grid = grid
         self.game = game
-        self.power = type.power
-        self.base_fire_cooldown = 1000
-        self.fire_cooldown = self.base_fire_cooldown
-        self.range = type.range
-        self.bullet_speed = float(300)/1000
 
     def update(self, elapsed_time):
         if self.fire_cooldown > 0:

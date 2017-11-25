@@ -6,3 +6,4 @@ class PlantType:
         self.life = life
         self.range = range
         self.price = price
+        self.fire_cooldown = 1000
