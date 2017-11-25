@@ -8,6 +8,7 @@ from plant import Plant
 from plant_panel import PlantPanel
 from enemies import *
 from plant_type import *
+from sprite_loader import SpriteLoader
 
 grid_pos = (50, 20)
 grid_size = (500, 500)
@@ -27,6 +28,8 @@ class GameState:
         self.grid = Grid(grid_size, grid_pos, self)
         self.plant_types = self.create_plant_types()
         self.plant_panel = PlantPanel(self, pygame.Rect(0, 40, 40, 200))
+        self.sprite_loader = SpriteLoader(self.grid.cellsize)
+        self.enemy_factory = EnemyFactory(self.sprite_loader)
 
     def new_game(self):
         self.player = Player()
@@ -81,7 +84,7 @@ class GameState:
 
     def update_wave_status(self):
         if self.current_wave is None:
-            self.current_wave = Wave()
+            self.current_wave = Wave(self.enemy_factory)
         if self.time_since_last_enemy > self.current_wave.next_enemy_timeout():
             next_enemy = self.current_wave.get_enemy()
             next_enemy.row = random.randint(0, 9)
