@@ -1,5 +1,6 @@
 import pygame, yaml
 from game_state import GameState
+from state import StateStack
 
 
 def main():
@@ -13,13 +14,16 @@ def main():
     screen = pygame.display.set_mode(size)
     pygame.display.set_caption("PyVZ")
 
-    state = GameState(screen, config_data)
-    state.new_game()
+    state_stack = StateStack()
+    game_state = GameState(screen, config_data)
+    game_state.new_game()
+    state_stack.push(game_state)
 
     game_running = True
     old_time = pygame.time.get_ticks()
 
     while game_running:
+        state = state_stack.current()
         current_time = pygame.time.get_ticks()
         elapsed = current_time - old_time
         old_time = current_time

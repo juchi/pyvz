@@ -3,6 +3,7 @@ import random
 
 import geometry
 from grid import Grid
+from pause_state import PauseState
 from player import Player
 from plant import PlantFactory
 from plant_panel import PlantPanel
@@ -16,6 +17,7 @@ grid_size = (500, 500)
 
 class GameState:
     def __init__(self, screen, config):
+        self.stack = None
         self.screen = screen
         self.config = config
         self.player = Player()
@@ -31,6 +33,9 @@ class GameState:
         self.sprite_loader = SpriteLoader(self.grid.cellsize)
         self.enemy_factory = EnemyFactory(self.sprite_loader)
         self.plant_factory = PlantFactory(self.sprite_loader, self)
+
+    def set_stack(self, stack):
+        self.stack = stack
 
     def new_game(self):
         self.player = Player()
@@ -62,6 +67,8 @@ class GameState:
     def key_pressed(self, key):
         if key == pygame.K_n:
             self.new_game()
+        if key == pygame.K_ESCAPE:
+            self.stack.push(PauseState(self.screen, self.config))
         return
 
     def update(self, elapsed_time):
