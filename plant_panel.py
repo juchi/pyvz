@@ -3,9 +3,10 @@ import pygame
 
 
 class PlantPanel:
-    def __init__(self, game, rect):
+    def __init__(self, game, parent_surface, rect):
         self.game = game
         self.rect = rect
+        self.surface = parent_surface.subsurface(rect)
         self.buttons = self.construct_buttons()
 
         default_font = pygame.font.get_default_font()
@@ -30,10 +31,10 @@ class PlantPanel:
     def is_point_inside(self, pos):
         return self.rect.collidepoint(pos)
 
-    def draw(self, screen):
-        screen.fill((100, 100, 100), self.rect)
+    def draw(self):
+        self.surface.fill((100, 100, 100))
         for button in self.buttons:
-            button.draw(screen, self.price_font, self.rect.topleft, self.game.current_plant_type == button.plant_type)
+            button.draw(self.surface, self.price_font, self.game.current_plant_type == button.plant_type)
 
 
 class Button:
@@ -41,9 +42,9 @@ class Button:
         self.rect = rect
         self.plant_type = ptype
 
-    def draw(self, screen, price_font, panel_top_left, selected):
-        screen.fill(self.plant_type.color, self.rect.move(panel_top_left))
+    def draw(self, surface, price_font, selected):
+        surface.fill(self.plant_type.color, self.rect)
         price_surface = price_font.render(str(self.plant_type.price), True, (0, 0, 0))
-        screen.blit(price_surface, self.rect.move(panel_top_left))
+        surface.blit(price_surface, self.rect)
         if selected:
-            pygame.draw.rect(screen, (255, 0, 0), self.rect.move(panel_top_left), 1)
+            pygame.draw.rect(surface, (255, 0, 0), self.rect, 1)
