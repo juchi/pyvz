@@ -10,6 +10,7 @@ from plant_panel import PlantPanel
 from enemies import *
 from plant_type import *
 from sprite_loader import SpriteLoader
+from game_display import GameDisplay
 
 grid_pos = (50, 20)
 grid_size = (500, 500)
@@ -19,6 +20,7 @@ class GameState:
     def __init__(self, screen, config):
         self.stack = None
         self.screen = screen
+        self.display = GameDisplay(screen)
         self.config = config
         self.player = Player()
         self.plants = []
@@ -81,11 +83,11 @@ class GameState:
 
         self.screen.fill((255, 255, 255))
         self.plant_panel.draw(self.screen)
-        display_grid(self.screen, grid_pos, self.grid)
-        display_hud(self.screen, self.player)
-        display_plants(self.screen, self.plants, self.grid)
-        display_enemies(self.screen, self.enemies, self.grid)
-        display_bullets(self.screen, self.bullets, self.grid)
+        self.display.display_grid(grid_pos, self.grid)
+        self.display.display_hud(self.player)
+        self.display.display_plants(self.plants, self.grid)
+        self.display.display_enemies(self.enemies, self.grid)
+        self.display.display_bullets(self.bullets, self.grid)
 
     def update_timers(self, elapsed_time):
         self.time_since_last_enemy += elapsed_time
@@ -123,56 +125,3 @@ class GameState:
                         self.player.money += 30
                     break
 
-
-def display_grid(screen, pos, grid):
-    black = 0, 0, 0
-    xmax = grid.size[0] + pos[0]
-    ymax = grid.size[1] + pos[1]
-
-    for x in range(pos[0], xmax + 1, grid.size[0] / grid.cols):
-        pygame.draw.line(screen, black, (x, pos[1]), (x, ymax))
-
-    for y in range(pos[1], ymax + 1, grid.size[1] / grid.rows):
-        pygame.draw.line(screen, black, (pos[0], y), (xmax, y))
-
-
-def display_hud(screen, player):
-    default_font = pygame.font.get_default_font()
-    hud_font = pygame.font.Font(default_font, 16)
-    money_surface = hud_font.render("Money:" + str(player.money), True, (0, 0, 0))
-    screen.blit(money_surface, (0, 0))
-
-
-def display_plants(screen, plants, grid):
-    for plant in plants:
-        pos = (plant.position[0] + grid.position[0],
-               plant.position[1] + grid.position[1])
-        sprite = plant.get_sprite()
-        if sprite is not None:
-            screen.blit(sprite, (pos[0] - sprite.get_width() / 2, pos[1] - sprite.get_height() / 2))
-        else:
-            pygame.draw.circle(screen, plant.color, pos, grid.cellsize / 2)
-
-
-def display_enemies(screen, enemies, grid):
-    for enemy in enemies:
-        if not enemy.alive:
-            continue
-        pos = (enemy.position[0] + grid.position[0],
-               enemy.position[1] + grid.position[1])
-        pos = (int(pos[0]), int(pos[1]))
-        sprite = enemy.get_sprite()
-        if sprite is not None:
-            screen.blit(sprite, (pos[0] - sprite.get_width()/2, pos[1] - sprite.get_height()/2))
-        else:
-            pygame.draw.circle(screen, (255, 0, 0), pos, grid.cellsize / 2)
-
-
-def display_bullets(screen, bullets, grid):
-    for bullet in bullets:
-        if not bullet.active:
-            continue
-        pos = (bullet.position[0] + grid.position[0],
-               bullet.position[1] + grid.position[1])
-        pos = (int(pos[0]), int(pos[1]))
-        pygame.draw.circle(screen, (255, 0, 0), pos, grid.cellsize / 10)
