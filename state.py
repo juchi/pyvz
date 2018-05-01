@@ -12,4 +12,6 @@ class StateStack:
             del self.list[len(self.list) - 1]
 
     def current(self):
+        if len(self.list) == 0:
+            return None
         return self.list[len(self.list) - 1]

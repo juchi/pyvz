@@ -1,29 +1,42 @@
 import pygame, yaml
 from game_state import GameState
+from menu_state import MenuState
 from state import StateStack
+
+
+class Core:
+    def __init__(self, screen):
+        config_file = file('config.yml', 'r')
+        self.config = yaml.load(config_file)
+        self.screen = screen
+
+    def create_menu(self):
+        return MenuState(self.screen, self)
+
+    def create_game(self):
+        return GameState(self.screen, self.config)
 
 
 def main():
     pygame.init()
     pygame.font.init()
-
-    config_file = file('config.yml', 'r')
-    config_data = yaml.load(config_file)
+    pygame.display.set_caption("PyVZ")
 
     size = 800, 600
     screen = pygame.display.set_mode(size)
-    pygame.display.set_caption("PyVZ")
+
+    core = Core(screen)
 
     state_stack = StateStack()
-    game_state = GameState(screen, config_data)
-    game_state.new_game()
-    state_stack.push(game_state)
+    state_stack.push(core.create_menu())
 
     game_running = True
     old_time = pygame.time.get_ticks()
 
     while game_running:
         state = state_stack.current()
+        if not state:
+            break
         current_time = pygame.time.get_ticks()
         elapsed = current_time - old_time
         old_time = current_time
