@@ -68,7 +68,7 @@ class GameState:
         if key == pygame.K_n:
             self.new_game()
         if key == pygame.K_ESCAPE:
-            self.stack.push(PauseState(self.screen, self.config))
+            self.stack.push(PauseState(self.screen, self))
         return
 
     def update(self, elapsed_time):
