@@ -1,10 +1,11 @@
 import pygame
 import gui
+from state import State
 
 
-class PauseState:
+class PauseState(State):
     def __init__(self, screen, game):
-        self.stack = None
+        State.__init__(self)
         self.game = game
         self.screen = screen
         (w, h) = screen.get_size()
@@ -15,11 +16,11 @@ class PauseState:
         ng_button.set_onclick_callback(lambda: self.game.new_game() or self.stack.pop())
         resume_button = gui.Button("Resume", pygame.Rect(10, 90, 120, 30))
         resume_button.set_onclick_callback(lambda: self.stack.pop())
+        quit_button = gui.Button("Quit game", pygame.Rect(10, 130, 120, 30))
+        quit_button.set_onclick_callback(lambda: self.stack.pop() or self.stack.pop())
         self.gui.add_child(ng_button)
         self.gui.add_child(resume_button)
-
-    def set_stack(self, stack):
-        self.stack = stack
+        self.gui.add_child(quit_button)
 
     def update(self, elapsed):
         self.screen.fill((220, 220, 220), self.rect)

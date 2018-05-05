@@ -1,12 +1,13 @@
 import gui
 from level import Level
+from state import State
 
 
-class LevelSelectState:
+class LevelSelectState(State):
     def __init__(self, screen, core):
+        State.__init__(self)
         self.config = core.config
         self.core = core
-        self.stack = None
         self.gui = gui.Window(screen, screen.get_rect())
         self.gui.background_color = (255, 255, 255)
 
@@ -22,18 +23,12 @@ class LevelSelectState:
         back_btn.set_onclick_callback(lambda: self.stack.pop())
         self.gui.add_child(back_btn)
 
-    def set_stack(self, stack):
-        self.stack = stack
-
     def update(self, elapsed):
         self.gui.render()
         return
 
     def mouse_clicked(self, button, pos):
         self.gui.mouse_clicked(button, pos)
-        return
-
-    def key_pressed(self, key):
         return
 
     def select_level(self, index):

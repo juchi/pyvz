@@ -1,11 +1,12 @@
 import gui
 from level import Level
 from level_select_state import LevelSelectState
+from state import State
 
 
-class MenuState:
+class MenuState(State):
     def __init__(self, screen, core):
-        self.stack = None
+        State.__init__(self)
         self.core = core
 
         self.gui = gui.Window(screen, screen.get_rect())
@@ -20,9 +21,6 @@ class MenuState:
         self.gui.add_child(level_btn)
         self.gui.add_child(exit_btn)
 
-    def set_stack(self, stack):
-        self.stack = stack
-
     def new_game(self):
         game_state = self.core.create_game()
         self.stack.push(game_state)
@@ -35,7 +33,4 @@ class MenuState:
 
     def mouse_clicked(self, button, pos):
         self.gui.mouse_clicked(button, pos)
-        return
-
-    def key_pressed(self, key):
         return

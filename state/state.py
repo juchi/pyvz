@@ -1,4 +1,21 @@
 
+class State:
+    def __init__(self):
+        self.stack = None
+
+    def set_stack(self, stack):
+        self.stack = stack
+
+    def key_pressed(self, key):
+        return
+
+    def update(self, elapsed):
+        return
+
+    def mouse_clicked(self, button, pos):
+        return
+
+
 class StateStack:
     def __init__(self):
         self.list = []
