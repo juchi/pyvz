@@ -14,8 +14,8 @@ class GameState:
     def set_stack(self, stack):
         self.stack = stack
 
-    def new_game(self):
-        self.game.new_game()
+    def new_game(self, level=None):
+        self.game.new_game(level)
 
     def mouse_clicked(self, button, pos):
         self.game.mouse_clicked(button, pos)

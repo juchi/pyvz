@@ -2,3 +2,15 @@ plants:
     - {"name": "default", "color": [0, 255, 0], "power": 30, "life": 50, "range": 400, "price": 50}
     - {"name": "ice", "color": [0, 196, 0], "power": 40, "life": 50, "range": 400, "price": 80}
     - {"name": "fire", "color": [0, 128, 0], "power": 60, "life": 50, "range": 400, "price": 120}
+
+levels:
+    -
+        "name": "level 1"
+        "waves":
+            - { enemies: 1, type: 1 }
+            - { enemies: 2, type: 1 }
+    -
+        "name": "level 2"
+        "waves":
+            - { enemies: 5, type: 1 }
+            - { enemies: 10, type: 1 }

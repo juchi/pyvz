@@ -1,10 +1,16 @@
 class Wave:
     def __init__(self, enemy_factory):
         self.enemies = []
+        self.enemy_count = 0
+        self.enemy_created = 0
         self.enemy_factory = enemy_factory
         self.enemy_attributes = {'life': 100, 'speed': float(40)/1000}
 
     def get_enemy(self):
+        if self.enemy_created >= self.enemy_count:
+            return None
+
+        self.enemy_created += 1
         return self.enemy_factory.new_enemy(self.enemy_attributes)
 
     def next_enemy_timeout(self):

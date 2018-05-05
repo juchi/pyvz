@@ -1,4 +1,5 @@
 import gui
+from level import Level
 
 
 class MenuState:
@@ -20,6 +21,8 @@ class MenuState:
     def new_game(self):
         game_state = self.core.create_game()
         self.stack.push(game_state)
+        level = Level(self.core.config["levels"][0])
+        game_state.new_game(level)
 
     def update(self, elapsed):
         self.gui.render()

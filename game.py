@@ -19,8 +19,11 @@ class Game:
         self.config = config
         self.display = display
         self.player = Player()
+        self.level = None
+        self.level_done = False
         self.plants = []
         self.current_wave = None
+        self.wave_index = 0
         self.enemies = []
         self.bullets = []
         self.time_since_last_enemy = 0
@@ -33,10 +36,18 @@ class Game:
         self.enemy_factory = EnemyFactory(self.sprite_loader)
         self.plant_factory = PlantFactory(self.sprite_loader, self)
 
-    def new_game(self):
+    def new_game(self, level=None):
+        if level is not None:
+            self.level = level
+        if self.level is None:
+            print "No level provided"
+            quit()
+
         self.player = Player()
+        self.level_done = False
         self.plants = []
         self.current_wave = None
+        self.wave_index = 0
         self.enemies = []
         self.bullets = []
         self.time_since_last_enemy = 0
@@ -65,11 +76,12 @@ class Game:
 
     def update(self, elapsed_time):
         self.update_timers(elapsed_time)
-        self.update_wave_status()
 
-        self.update_enemies(elapsed_time)
-        self.update_plants(elapsed_time)
-        self.update_bullets(elapsed_time)
+        if not self.level_done:
+            self.update_wave_status()
+            self.update_enemies(elapsed_time)
+            self.update_plants(elapsed_time)
+            self.update_bullets(elapsed_time)
 
         self.plant_panel.draw()
         self.display.display_grid(grid_pos, self.grid)
@@ -83,13 +95,20 @@ class Game:
 
     def update_wave_status(self):
         if self.current_wave is None:
-            self.current_wave = Wave(self.enemy_factory)
-        if self.time_since_last_enemy > self.current_wave.next_enemy_timeout():
+            if self.wave_index < len(self.level.waves):
+                wave = Wave(self.enemy_factory)
+                wave.enemy_count = self.level.waves[self.wave_index]["enemies"]
+                self.wave_index += 1
+                self.current_wave = wave
+        if self.current_wave and self.time_since_last_enemy > self.current_wave.next_enemy_timeout():
             next_enemy = self.current_wave.get_enemy()
-            next_enemy.row = random.randint(0, 9)
-            next_enemy.position = (self.grid.size[0], self.grid.get_center_cell_y(next_enemy.row))
-            self.enemies.append(next_enemy)
-            self.time_since_last_enemy = 0
+            if next_enemy is None:
+                self.current_wave = None
+            else:
+                next_enemy.row = random.randint(0, 9)
+                next_enemy.position = (self.grid.size[0], self.grid.get_center_cell_y(next_enemy.row))
+                self.enemies.append(next_enemy)
+                self.time_since_last_enemy = 0
 
     def update_enemies(self, elapsed_time):
         for obj in self.enemies:
@@ -97,6 +116,8 @@ class Game:
             if not obj.alive:
                 self.player.money += obj.money_value
         self.enemies = [e for e in self.enemies if e.alive]
+        if not self.current_wave and len(self.enemies) == 0:
+            self.level_done = True
 
     def update_plants(self, elapsed_time):
         for obj in self.plants:
