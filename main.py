@@ -1,7 +1,8 @@
 import pygame, yaml
-from game_state import GameState
-from menu_state import MenuState
-from state import StateStack
+
+from state.game_state import GameState
+from state.menu_state import MenuState
+from state.state import StateStack
 
 
 class Core:
