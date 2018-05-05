@@ -8,6 +8,7 @@ class MenuState:
         self.core = core
 
         self.gui = gui.Window(screen, screen.get_rect())
+        self.gui.background_color = (255, 255, 255)
         ng_btn = gui.Button("New game", (50, 50, 120, 30))
         ng_btn.set_onclick_callback(self.new_game)
         exit_btn = gui.Button("Exit", (50, 90, 120, 30))

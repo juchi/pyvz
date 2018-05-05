@@ -7,11 +7,14 @@ class Window:
         self.children = []
         self.rect = rect
         self.surface = screen.subsurface(rect)
+        self.background_color = None
 
     def add_child(self, child):
         self.children.append(child)
 
     def render(self):
+        if self.background_color:
+            self.surface.fill(self.background_color)
         for child in self.children:
             child.render(self.surface)
 
