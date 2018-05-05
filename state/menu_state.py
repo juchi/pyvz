@@ -1,5 +1,6 @@
 import gui
 from level import Level
+from level_select_state import LevelSelectState
 
 
 class MenuState:
@@ -11,9 +12,12 @@ class MenuState:
         self.gui.background_color = (255, 255, 255)
         ng_btn = gui.Button("New game", (50, 50, 120, 30))
         ng_btn.set_onclick_callback(self.new_game)
+        level_btn = gui.Button("Select level", (200, 50, 120, 30))
+        level_btn.set_onclick_callback(lambda: self.stack.push(LevelSelectState(screen, self.core)))
         exit_btn = gui.Button("Exit", (50, 90, 120, 30))
         exit_btn.set_onclick_callback(lambda: self.stack.pop())
         self.gui.add_child(ng_btn)
+        self.gui.add_child(level_btn)
         self.gui.add_child(exit_btn)
 
     def set_stack(self, stack):
