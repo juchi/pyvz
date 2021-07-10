@@ -15,7 +15,7 @@ class LevelSelectState(State):
         y = 50
         for index, level in enumerate(self.config["levels"]):
             level_btn = gui.Button(level["name"], (x, y, 120, 30))
-            level_btn.set_onclick_callback(lambda : self.select_level(index))
+            level_btn.set_onclick_callback(lambda i=index: self.select_level(i))
             x += 150
             self.gui.add_child(level_btn)
 

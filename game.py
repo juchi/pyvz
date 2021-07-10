@@ -85,10 +85,11 @@ class Game:
 
         self.plant_panel.draw()
         self.display.display_grid(grid_pos, self.grid)
-        self.display.display_hud(self.player)
+        self.display.display_hud(self)
         self.display.display_plants(self.plants, self.grid)
         self.display.display_enemies(self.enemies, self.grid)
         self.display.display_bullets(self.bullets, self.grid)
+        self.display.display_info(elapsed_time)
 
     def update_timers(self, elapsed_time):
         self.time_since_last_enemy += elapsed_time
@@ -98,6 +99,7 @@ class Game:
             if self.wave_index < len(self.level.waves):
                 wave = Wave(self.enemy_factory)
                 wave.enemy_count = self.level.waves[self.wave_index]["enemies"]
+                wave.enemy_delay = self.level.waves[self.wave_index]["delay"]
                 self.wave_index += 1
                 self.current_wave = wave
         if self.current_wave and self.time_since_last_enemy > self.current_wave.next_enemy_timeout():
@@ -114,10 +116,14 @@ class Game:
         for obj in self.enemies:
             obj.update(elapsed_time)
             if not obj.alive:
-                self.player.money += obj.money_value
+                self.kill_enemy(obj)
         self.enemies = [e for e in self.enemies if e.alive]
         if not self.current_wave and len(self.enemies) == 0:
             self.level_done = True
+
+    def kill_enemy(self, enemy):
+        self.player.money += enemy.money_value
+        self.display.add_money_win(enemy.money_value, enemy.position)
 
     def update_plants(self, elapsed_time):
         for obj in self.plants:
@@ -131,6 +137,4 @@ class Game:
                 if enemy.alive and geometry.distance(obj.position, enemy.position) < 30:
                     obj.active = False
                     enemy.take_damages(obj.power)
-                    if not enemy.alive:
-                        self.player.money += 30
                     break

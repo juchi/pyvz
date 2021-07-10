@@ -3,6 +3,7 @@ class Wave:
         self.enemies = []
         self.enemy_count = 0
         self.enemy_created = 0
+        self.enemy_delay = 1000
         self.enemy_factory = enemy_factory
         self.enemy_attributes = {'life': 100, 'speed': float(40)/1000}
 
@@ -14,7 +15,7 @@ class Wave:
         return self.enemy_factory.new_enemy(self.enemy_attributes)
 
     def next_enemy_timeout(self):
-        return 3000
+        return self.enemy_delay
 
 
 class EnemyFactory:
@@ -35,6 +36,7 @@ class Enemy:
         self.row = -1
         self.speed = attributes['speed']
         self.alive = True
+        self.active = True
         self.money_value = 50
         self.animation_timer = 0
         self.animation_sprite = 0

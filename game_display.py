@@ -4,6 +4,7 @@ import pygame
 class GameDisplay:
     def __init__(self, screen):
         self.screen = screen
+        self.money_win_info = []
 
     def display_grid(self, pos, grid):
         black = 0, 0, 0
@@ -16,10 +17,10 @@ class GameDisplay:
         for y in range(pos[1], ymax + 1, grid.size[1] / grid.rows):
             pygame.draw.line(self.screen, black, (pos[0], y), (xmax, y))
 
-    def display_hud(self, player):
+    def display_hud(self, game):
         default_font = pygame.font.get_default_font()
         hud_font = pygame.font.Font(default_font, 16)
-        money_surface = hud_font.render("Money:" + str(player.money), True, (0, 0, 0))
+        money_surface = hud_font.render("Money: " + str(game.player.money) + " Level: " + str(game.level.name), True, (0, 0, 0))
         self.screen.blit(money_surface, (0, 0))
 
     def display_plants(self, plants, grid):
@@ -53,3 +54,37 @@ class GameDisplay:
                    bullet.position[1] + grid.position[1])
             pos = (int(pos[0]), int(pos[1]))
             pygame.draw.circle(self.screen, (255, 0, 0), pos, grid.cellsize / 10)
+
+    def add_money_win(self, amount, position):
+        default_font = pygame.font.get_default_font()
+        money_font = pygame.font.Font(default_font, 16)
+
+        info = None
+        for obj in self.money_win_info:
+            if not obj.surface:
+                info = obj
+                info.duration = 0
+
+        if not info:
+            info = MoneyInfo()
+            self.money_win_info.append(info)
+
+        info.surface = money_font.render(str(amount), True, (100, 150, 0))
+        info.position = position
+
+    def display_info(self, elapsed):
+        for info in self.money_win_info:
+            if not info.surface:
+                continue
+            info.position = (info.position[0], info.position[1] - elapsed * 300 / 1000)
+            self.screen.blit(info.surface, info.position)
+            info.duration += elapsed
+            if info.duration > 1000:
+                info.surface = None
+
+
+class MoneyInfo:
+    def __init__(self):
+        self.duration = 0
+        self.surface = None
+        self.position = (0, 0)

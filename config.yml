@@ -7,10 +7,10 @@ levels:
     -
         "name": "level 1"
         "waves":
-            - { enemies: 1, type: 1 }
-            - { enemies: 2, type: 1 }
+            - { enemies: 1, delay: 1000, type: 1 }
+            - { enemies: 2, delay: 1000, type: 1 }
     -
         "name": "level 2"
         "waves":
-            - { enemies: 5, type: 1 }
-            - { enemies: 10, type: 1 }
+            - { enemies: 5, delay: 2000, type: 1 }
+            - { enemies: 10, delay: 2000, type: 1 }
